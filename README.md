@@ -48,6 +48,8 @@ Para rodar o projeto utilizando Docker, execute o seguinte comando:
 docker-compose up --build
 ```
 
+Porta padrão: 3000
+
 ### Sem Docker
 
 Se você preferir rodar os projetos separadamente, existem dois projetos na pasta `package`: `api` e `genre`. Para rodar cada um deles, certifique-se de que os servidores MySQL e MongoDB já estejam em execução e que as variáveis de ambiente estejam corretamente configuradas.
@@ -83,6 +85,8 @@ npm run build
 ```bash
 npm start
 ```
+
+Porta padrão: 3000
 
 #### Genre
 
