@@ -2,6 +2,12 @@
 
 O MAAS é um serviço de API desenvolvido com NestJS que permite gerenciar informações sobre filmes e gêneros. Este projeto foi criado como parte de um teste de código para uma entrevista de emprego e serve como um exemplo de como configurar um ambiente com múltiplas dependências, incluindo MySQL e MongoDB.
 
+## Dependencias
+
+- Node 20.11.0
+- MySql server
+- MongoDB server
+
 ## Configurações do Ambiente
 
 ### Variáveis de Ambiente
