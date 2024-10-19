@@ -1,0 +1,81 @@
+version: '3.8'
+services:
+  mysql:
+    image: mysql/mysql-server:latest
+    container_name: mysql
+    restart: always
+    environment:
+      - MYSQL_DATABASE=mysqlDB
+      - MYSQL_ROOT_PASSWORD=mysqlPW
+    ports:
+      - '3306:3306'
+    volumes:
+      - mysql-volume:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    
+  mongo:
+    image: mongo:latest
+    container_name: mongo
+    restart: always
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=mongoPW
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongo-volume:/data/db
+      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js
+
+  genre:
+    build:
+      context: ./packages/genre
+      dockerfile: Dockerfile
+    container_name: genre
+    env_file:
+      - .env
+    volumes:
+      - ./packages/genre:/usr/src/genre
+    depends_on:
+      - mongo
+    environment:
+      - NODE_ENV=production
+      - MONGODB_HOST=mongo
+      - MONGODB_PORT=27017
+      - MONGODB_DB=MAAS
+      - MONGODB_USER=root
+      - MONGODB_PASSWORD=mongoPW
+    restart: on-failure
+
+  api:
+    build:
+      context: ./packages/api
+      dockerfile: Dockerfile
+    container_name: api
+    env_file:
+      - .env
+    volumes:
+      - ./packages/api:/usr/src/api
+    depends_on:
+      - mysql
+      - mongo
+    environment:
+      - NODE_ENV=production
+      - DB_HOST=mysql
+      - DB_USER=root
+      - DB_PASS=mysqlPW
+      - DB_PORT=3306
+      - DB_DATABASE=MAAS
+      - MONGODB_HOST=mongo
+      - MONGODB_PORT=27017
+      - MONGODB_DB=MAAS
+      - MONGODB_USER=root
+      - MONGODB_PASSWORD=mongoPW
+    ports:
+      - '3000:3000'
+    restart: on-failure
+
+volumes:
+  mysql-volume:
+    driver: local
+  mongo-volume:
+    driver: local
